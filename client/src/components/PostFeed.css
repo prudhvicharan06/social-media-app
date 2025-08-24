@@ -1,0 +1,64 @@
+.postfeed-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 24px;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  border-radius: 16px;
+  box-shadow: 0 2px 24px rgba(67,198,172,0.10);
+}
+
+.postfeed-title {
+  text-align: center;
+  color: #2d3a4b;
+  font-size: 2.2rem;
+  margin-bottom: 28px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 8px #fff7, 0 1px 0 #b6c1d1;
+}
+
+.postfeed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.post-card {
+  background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  border-radius: 12px;
+  padding: 22px 20px;
+  box-shadow: 0 2px 12px rgba(180,190,200,0.10);
+  transition: box-shadow 0.2s, transform 0.2s;
+  color: #222;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-card:hover {
+  box-shadow: 0 8px 32px rgba(180,190,200,0.18);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.post-content {
+  font-size: 1.15rem;
+  color: #222;
+  margin-bottom: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 4px #e0eafc44;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: #6b7a8f;
+  opacity: 0.9;
+}
+
+.no-posts {
+  text-align: center;
+  color: #b6c1d1;
+  font-size: 1.2rem;
+  margin-top: 36px;
+  font-weight: 600;
+}
