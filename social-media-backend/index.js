@@ -19,14 +19,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/posts', postRoutes);
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
-// Test route
+// Simple test route
 app.get('/api/test', (req, res) => {
     res.send('API is running');
 });
+
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
 
 // MongoDB connect
 mongoose.connect(process.env.MONGO_URI)
@@ -39,12 +45,9 @@ const PORT = process.env.PORT || 5000;
 
 // Handle static files and React routing in production
 if (process.env.NODE_ENV === 'production') {
-    // Serve static files
-    app.use(express.static(path.join(__dirname, '../social-media-frontend/build')));
-    
-    // Handle all other routes
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../social-media-frontend/build/index.html'));
+    app.use(express.static('build'));
+    app.get('*', function(req, res) {
+        res.sendFile('build/index.html', { root: path.join(__dirname, '..') });
     });
 }
 
