@@ -18,17 +18,20 @@ const __dirname = dirname(__filename);
 const app = express();
 app.use(cors());
 app.use(express.json());
-//
 
-// Test route
-app.get('/', (req, res) => {
-  res.send('API is running');
-});
+// Serve static files first in production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../social-media-frontend/build')));
+}
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 
+// Test route
+app.get('/api/test', (req, res) => {
+    res.send('API is running');
+});
 
 // MongoDB connect
 mongoose.connect(process.env.MONGO_URI)
@@ -39,12 +42,9 @@ mongoose.connect(process.env.MONGO_URI)
 
 const PORT = process.env.PORT || 5000;
 
-// Serve static files from the React frontend app
+// Handle React routing in production
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../social-media-frontend/build')));
-
-    // Handle any requests that don't match the above
-    app.get('*', (req, res) => {
+    app.get('/*', (req, res) => {
         res.sendFile(path.join(__dirname, '../social-media-frontend/build', 'index.html'));
     });
 }
