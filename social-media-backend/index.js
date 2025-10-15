@@ -3,6 +3,8 @@ dotenv.config();
 // dotenv.config() is used to load environment variables from a .env file into process.env.
 import express from 'express';
 import mongoose from 'mongoose';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import path from 'path';
 
 import cors from 'cors';
@@ -10,7 +12,8 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import postRoutes from './routes/postRoutes.js';
 
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 app.use(cors());
