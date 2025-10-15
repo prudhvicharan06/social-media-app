@@ -3,6 +3,7 @@ dotenv.config();
 // dotenv.config() is used to load environment variables from a .env file into process.env.
 import express from 'express';
 import mongoose from 'mongoose';
+import path from 'path';
 
 import cors from 'cors';
 
@@ -34,6 +35,17 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 const PORT = process.env.PORT || 5000;
+
+// Serve static files from the React frontend app
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../social-media-frontend/build')));
+
+    // Handle any requests that don't match the above
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../social-media-frontend/build', 'index.html'));
+    });
+}
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
@@ -45,3 +57,4 @@ app.listen(PORT, () => {
 // The server is set up to handle JSON requests and has CORS enabled for all origins.
 // The MongoDB connection is established using the connection string stored in the environment variable MONGO_URI.
 // The server is set to listen on a specified port, defaulting to 5000 if not provided in the environment variables.
+// The server is configured to serve a React frontend app in production, by serving static files from the build directory and handling all other requests by sending back the index.html file.
