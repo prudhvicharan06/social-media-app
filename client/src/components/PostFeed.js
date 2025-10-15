@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import './PostFeed.css'; // Add this import if you want to use a separate CSS file
+import '../styles/PostFeed.css';
 
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchPosts = async () => {
+    setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/api/posts");
       setPosts(res.data);
     } catch (err) {
       console.error("Error fetching posts:", err);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -20,20 +23,50 @@ const PostFeed = () => {
 
   return (
     <div className="postfeed-container">
-      <h2 className="postfeed-title">Recent Posts</h2>
-      <div className="postfeed-list">
-        {posts && posts.length > 0 ? (
+      <div className="postfeed-header">
+        <h2>Your Feed</h2>
+        <button onClick={fetchPosts} className="refresh-btn">
+          🔄
+        </button>
+      </div>
+      
+      <div className="posts-container">
+        {loading ? (
+          <div className="loading">Loading posts...</div>
+        ) : posts.length > 0 ? (
           posts.map((post) => (
-            <div className="post-card" key={post._id}>
-              <div className="post-content">{post.content}</div>
-              <div className="post-meta">
-                <span className="post-author">By: {post.author?.name || 'Unknown'}</span>
-                <span className="post-date">{new Date(post.createdAt).toLocaleString()}</span>
+            <article className="post-card" key={post._id}>
+              <header className="post-header">
+                <div className="author-info">
+                  <div className="author-avatar">
+                    {post.author?.name?.charAt(0) || '?'}
+                  </div>
+                  <div className="author-details">
+                    <h3>{post.author?.name || 'Unknown'}</h3>
+                    <time>{new Date(post.createdAt).toLocaleDateString()}</time>
+                  </div>
+                </div>
+              </header>
+              
+              <div className="post-body">
+                {post.content}
               </div>
-            </div>
+
+              <footer className="post-actions">
+                <button className="action-btn">
+                  ❤️ <span>Like</span>
+                </button>
+                <button className="action-btn">
+                  💬 <span>Comment</span>
+                </button>
+              </footer>
+            </article>
           ))
         ) : (
-          <div className="no-posts">No posts yet.</div>
+          <div className="empty-state">
+            <h3>No posts yet</h3>
+            <p>Start following people to see their posts here</p>
+          </div>
         )}
       </div>
     </div>
@@ -41,3 +74,4 @@ const PostFeed = () => {
 };
 
 export default PostFeed;
+

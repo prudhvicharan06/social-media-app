@@ -147,6 +147,19 @@ li {
   color: #222;
 }
 
+.app-container {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+}
+
+.main-content {
+  padding-top: 70px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 @media (max-width: 600px) {
   form, li {
     max-width: 98vw;
@@ -154,5 +167,12 @@ li {
   }
   nav {
     padding: 10px 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }

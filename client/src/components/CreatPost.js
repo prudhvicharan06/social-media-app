@@ -1,53 +1,74 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import '../styles/createPost.css';
 
 const CreatePost = () => {
   const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!content.trim()) {
+      alert("Please write something first!");
+      return;
+    }
 
+    setIsSubmitting(true);
     const token = localStorage.getItem("token");
-    console.log(token);
+
     if (!token) {
       alert("Please login first.");
+      navigate("/login");
       return;
     }
 
     try {
       await axios.post(
         "http://localhost:5000/api/posts",
-        { content }, // Fix: send content as a string, not as an object
+        { content },
         {
           headers: {
             Authorization: `Bearer ${token}`
           },
         }
       );
-      alert("Post created successfully!");
       navigate("/posts");
     } catch (err) {
-      console.error("Error creating post:", err);
-      alert("Failed to create post.");
+      alert("Failed to create post: " + (err.response?.data?.message || "Unknown error"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div>
-      <h2>Create a Post</h2>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          placeholder="What's on your mind?"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows="4"
-          cols="50"
-        />
-        <br />
-        <button type="submit">Post</button>
-      </form>
+    <div className="create-post-container">
+      <div className="create-post-card">
+        <h2>Create a New Post</h2>
+        <form onSubmit={handleSubmit} className="create-post-form">
+          <div className="form-group">
+            <textarea
+              placeholder="What's on your mind?"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows="6"
+              maxLength="500"
+              className="post-textarea"
+            />
+            <div className="char-counter">
+              {content.length}/500 characters
+            </div>
+          </div>
+          <button 
+            type="submit" 
+            className="submit-button"
+            disabled={isSubmitting || !content.trim()}
+          >
+            {isSubmitting ? "Posting..." : "Create Post"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

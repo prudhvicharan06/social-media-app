@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import "../styles/auth.css";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,37 +15,40 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", form);
-      localStorage.setItem("token", res.data.token);
-      console.log(res.data);
-      alert("Login successful!");
-      navigate("/create"); // Navigate to create post page after login
+      const response = await axios.post("http://localhost:5000/api/auth/login", form);
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
     } catch (err) {
-      alert("Error: " + err.response.data.message);
+      setError(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2 className="login-title">Login</h2>
-        <input
-          className="login-input"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          autoComplete="username"
-        />
-        <input
-          className="login-input"
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          autoComplete="current-password"
-        />
-        <button className="login-button" type="submit">Login</button>
-      </form>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Login</h2>
+        <form onSubmit={handleSubmit} className="auth-form">
+          {error && <div className="error-message">{error}</div>}
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+          />
+          <button type="submit" className="auth-button">Login</button>
+        </form>
+        <p className="auth-redirect">
+          Don't have an account? <Link to="/register">Sign up here</Link>
+        </p>
+      </div>
     </div>
   );
 };

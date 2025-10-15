@@ -1,29 +1,28 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Register from "./components/Register";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import PostFeed from "./components/PostFeed";
 import CreatePost from "./components/CreatPost";
+import Navbar from './components/Navbar';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <nav style={{ padding: "10px" }}>
-        <Link to="/register">Reg</Link> |{" "}
-        <Link to="/login">Login</Link> |{" "}
-        <Link to="/posts">View Posts</Link> |{" "}
-        <Link to="/create">Create Post</Link>
-      </nav>
-
-      <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/posts" element={<PostFeed />} />
-        <Route path="/create" element={<CreatePost />} />
-      </Routes>
+      <div className="app-container">
+        <Navbar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<PostFeed />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/posts" element={<PostFeed />} />
+            <Route path="/create" element={<CreatePost />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }
 
 export default App;
+       
